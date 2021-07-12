@@ -48,18 +48,28 @@ public final class AutomobileNumberUtil {
         int start = 0;
         int end = AutomobileNumberConstants.ALLOWED_CHARACTERS.length - 1;
         int pivot = end / 2;
-        // After completing loop pivot will be equals to the position of the character in ALLOWED_CHARACTERS
+
+        // After completing loop, pivot will equal to the position of the character in ALLOWED_CHARACTERS
         while (AutomobileNumberConstants.ALLOWED_CHARACTERS[pivot] != currentCharacter && start != end) {
             if (AutomobileNumberConstants.ALLOWED_CHARACTERS[pivot] < currentCharacter) {
                 start = pivot;
             } else {
                 end = pivot;
             }
-            pivot = (int) Math.ceil(((end - start) / (double) 2)) + start;
-        }
+            pivot = (end - start) / 2 + start;
 
-        // Character is not in the allowed list
-        if (start == end) return -1;
+            // Workaround
+            if ((end - start) == 1) {
+                if (AutomobileNumberConstants.ALLOWED_CHARACTERS[start] == currentCharacter) {
+                    return start;
+                } else if (AutomobileNumberConstants.ALLOWED_CHARACTERS[end] == currentCharacter) {
+                    return end;
+                } else {
+                    // Character not found
+                    return -1;
+                }
+            }
+        }
 
         return pivot;
     }
