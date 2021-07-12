@@ -1,0 +1,15 @@
+server:
+  address: 127.0.0.1
+  port: 8080
+  servlet:
+    context-path: /number
+
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    password: postgres
+    username: postgres
+    url: jdbc:postgresql://localhost:5432/gaishnik
+  jpa:
+    hibernate.ddl-auto: update
+    show-sql: true

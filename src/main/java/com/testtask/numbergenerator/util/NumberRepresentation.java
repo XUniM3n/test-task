@@ -53,7 +53,13 @@ public class NumberRepresentation {
             this.digitsString = "000";
             this.lettersString = new String(letters);
         } else {
-            this.digitsString = String.valueOf(digits);
+            String digitsString = String.valueOf(digits);
+            if (digitsString.length() == 1) {
+                digitsString = "00" + digitsString;
+            } else if (digitsString.length() == 2) {
+                digitsString = "0" + digitsString;
+            }
+            this.digitsString = digitsString;
         }
 
         return this;
