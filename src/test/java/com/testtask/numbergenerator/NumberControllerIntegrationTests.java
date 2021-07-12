@@ -68,7 +68,9 @@ class NumberControllerIntegrationTests {
             checkResponseForValidity(response);
         }
 
-        assertEquals(responseBody, predictedNewNumber);
+        predictedNewNumber = String.format("%s %s %s", predictedNewNumber, AutomobileNumberConstants.REGION,
+                AutomobileNumberConstants.COUNTRY);
+        assertEquals(predictedNewNumber, responseBody);
     }
 
     private void checkResponseForValidity(ResponseEntity<String> response) {
@@ -81,9 +83,16 @@ class NumberControllerIntegrationTests {
         char[] number = responseBody.substring(0, 6).toCharArray();
 
         // Check that every letter is in allowed list
-//        assertTrue(AutomobileNumberUtil.isCharacterInAllowedList(number[0]));
-//        assertTrue(AutomobileNumberUtil.isCharacterInAllowedList(number[4]));
-//        assertTrue(AutomobileNumberUtil.isCharacterInAllowedList(number[5]));
+        assertTrue(charArrayContains(number[0]));
+        assertTrue(charArrayContains(number[4]));
+        assertTrue(charArrayContains(number[5]));
+    }
+
+    private boolean charArrayContains(char character) {
+        for (var c : AutomobileNumberConstants.ALLOWED_CHARACTERS) {
+            if (c == character) return true;
+        }
+        return false;
     }
 
     private String createURLWithPort(String uri) {
