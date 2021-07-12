@@ -1,5 +1,6 @@
 package com.testtask.numbergenerator.controller;
 
+import com.testtask.numbergenerator.config.AutomobileNumberConstants;
 import com.testtask.numbergenerator.exception.MaxAutomobileNumberExceeded;
 import com.testtask.numbergenerator.exception.NoAutomobileNumbersInHistoryException;
 import com.testtask.numbergenerator.model.AutomobileNumber;
@@ -23,7 +24,7 @@ public class NumberController {
     public String random() {
         AutomobileNumber automobileNumber = automobileNumberService.getRandomNumber();
 //        return AutomobileNumberDto.getFromAutomobileNumber(automobileNumber);
-        return automobileNumber.getNumber();
+        return String.format("%s %s",automobileNumber.getNumber(), AutomobileNumberConstants.AUTOMOBILE_NUMBER_SUFFIX);
     }
 
     @GetMapping("/next")
@@ -35,6 +36,6 @@ public class NumberController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
 //        return AutomobileNumberDto.getFromAutomobileNumber(automobileNumber);
-        return automobileNumber.getNumber();
+        return String.format("%s %s",automobileNumber.getNumber(), AutomobileNumberConstants.AUTOMOBILE_NUMBER_SUFFIX);
     }
 }
