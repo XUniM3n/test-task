@@ -24,7 +24,7 @@ public class NumberController {
     public String random() {
         AutomobileNumber automobileNumber = automobileNumberService.getRandomNumber();
 //        return AutomobileNumberDto.getFromAutomobileNumber(automobileNumber);
-        return String.format("%s %s",automobileNumber.getNumber(), AutomobileNumberConstants.AUTOMOBILE_NUMBER_SUFFIX);
+        return automobileNumber.getNumber();
     }
 
     @GetMapping("/next")
@@ -33,7 +33,7 @@ public class NumberController {
         try {
             automobileNumber = automobileNumberService.getNextNumber();
         } catch (NoAutomobileNumbersInHistoryException | MaxAutomobileNumberExceeded e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+            return "Error: " + e.getMessage();
         }
 //        return AutomobileNumberDto.getFromAutomobileNumber(automobileNumber);
         return String.format("%s %s",automobileNumber.getNumber(), AutomobileNumberConstants.AUTOMOBILE_NUMBER_SUFFIX);
