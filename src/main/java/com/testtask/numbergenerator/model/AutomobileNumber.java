@@ -19,7 +19,7 @@ public class AutomobileNumber {
     @GeneratedValue
     private int id;
 
-    @Column(unique = true, length = AutomobileNumberConstants.NUMBER_SIZE, nullable = false)
+    @Column(unique = true, length = 6, nullable = false)
     private String number;
 
     public AutomobileNumber(String number) {

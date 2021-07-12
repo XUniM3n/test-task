@@ -1,8 +1,9 @@
 package com.testtask.numbergenerator;
 
 import com.testtask.numbergenerator.config.AutomobileNumberConstants;
-import com.testtask.numbergenerator.exception.MaxAutomobileNumberExceeded;
+import com.testtask.numbergenerator.exception.MaxAutomobileNumberLetterExceeded;
 import com.testtask.numbergenerator.util.AutomobileNumberUtil;
+import com.testtask.numbergenerator.util.NumberRepresentation;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,16 +19,15 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
-public class NumberControllerIntegrationTests {
+class NumberControllerIntegrationTests {
     @Autowired
     private ServletContext servletContext;
 
     @LocalServerPort
     private int port;
 
-    private static final Pattern pattern = Pattern.compile(String.format("[0-9А-Я]{%s} %s %s",
-            AutomobileNumberConstants.NUMBER_SIZE, AutomobileNumberConstants.REGION,
-            AutomobileNumberConstants.COUNTRY));
+    private static final Pattern pattern = Pattern.compile(String.format("[А-Я][0-9]{3}[А-Я]{2} %s %s",
+            AutomobileNumberConstants.REGION, AutomobileNumberConstants.COUNTRY));
 
     TestRestTemplate restTemplate = new TestRestTemplate();
 
@@ -46,13 +46,15 @@ public class NumberControllerIntegrationTests {
 
         checkResponseForValidity(response);
         String oldNumber = response.getBody();
+        NumberRepresentation numberRepresentation = new NumberRepresentation(oldNumber);
+
         String predictedNewNumber = null;
         try {
-            predictedNewNumber = AutomobileNumberUtil.getNextNumber(oldNumber);
-        } catch (MaxAutomobileNumberExceeded maxAutomobileNumberExceeded) {
-            // If this exception has been thrown it means oldNumber has to be equals to maximum number
-            String lastChar = String.valueOf(AutomobileNumberConstants.END_CHARACTER);
-            String maximumNumber = lastChar.repeat(AutomobileNumberConstants.NUMBER_SIZE);
+            predictedNewNumber = numberRepresentation.increment().getNumber();
+        } catch (MaxAutomobileNumberLetterExceeded maxAutomobileNumberLetterExceeded) {
+            // If this exception has been thrown it means letter part exceeded maximum possible value
+            String maximumNumber = AutomobileNumberConstants.END_LETTER + "999" + AutomobileNumberConstants.END_LETTER +
+                    AutomobileNumberConstants.END_LETTER;
             assertEquals(maximumNumber, oldNumber);
         }
 
@@ -62,7 +64,7 @@ public class NumberControllerIntegrationTests {
         String responseBody = response.getBody();
         // If oldNumber is maximum number
         if (predictedNewNumber == null) {
-            assertEquals("Error: Max automobile number exceeded", responseBody);
+            assertEquals("Error: Max letters exceeded", responseBody);
         } else {
             checkResponseForValidity(response);
         }
@@ -79,10 +81,10 @@ public class NumberControllerIntegrationTests {
 
         char[] number = responseBody.substring(0, 6).toCharArray();
 
-        // Check that every character is in allowed list
-        for (var i = 0; i < AutomobileNumberConstants.NUMBER_SIZE; i++) {
-            assertTrue(AutomobileNumberUtil.isCharacterInAllowedList(number[i]));
-        }
+        // Check that every letter is in allowed list
+        assertTrue(AutomobileNumberUtil.isCharacterInAllowedList(number[0]));
+        assertTrue(AutomobileNumberUtil.isCharacterInAllowedList(number[4]));
+        assertTrue(AutomobileNumberUtil.isCharacterInAllowedList(number[5]));
     }
 
     private String createURLWithPort(String uri) {
