@@ -15,8 +15,6 @@ public final class AutomobileNumberConstants {
     public static final char END_CHARACTER;
     // How many characters in automobile number excluding AUTOMOBILE_NUMBER_SUFFIX
     public static final int NUMBER_SIZE = 6;
-    // Throw exception if trying to generate next to maximum number
-    public static final String MAX_NUMBER;
 
     static {
         // Allowed digits: 0-9
@@ -37,9 +35,6 @@ public final class AutomobileNumberConstants {
 
         START_CHARACTER = allowedCharacters[0];
         END_CHARACTER = allowedCharacters[allowedCharacters.length - 1];
-
-        String lastChar = String.valueOf(letters[letters.length - 1]);
-        MAX_NUMBER = lastChar.repeat(6);
     }
 
     private AutomobileNumberConstants() {
