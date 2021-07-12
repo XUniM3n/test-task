@@ -23,7 +23,7 @@ public class NumberController {
     @GetMapping("/random")
     public String random() {
         AutomobileNumber automobileNumber = automobileNumberService.getRandomNumber();
-        return automobileNumber.getNumber();
+        return String.format("%s %s",automobileNumber.getNumber(), AutomobileNumberConstants.AUTOMOBILE_NUMBER_SUFFIX);
     }
 
     @GetMapping("/next")
