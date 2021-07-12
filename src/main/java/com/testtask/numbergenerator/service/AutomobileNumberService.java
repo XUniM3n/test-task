@@ -5,7 +5,6 @@ import com.testtask.numbergenerator.exception.MaxAutomobileNumberLetterExceeded;
 import com.testtask.numbergenerator.exception.NoAutomobileNumbersInHistoryException;
 import com.testtask.numbergenerator.model.AutomobileNumber;
 import com.testtask.numbergenerator.repository.AutomobileNumberRepository;
-import com.testtask.numbergenerator.util.AutomobileNumberUtil;
 import com.testtask.numbergenerator.util.NumberRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,7 +29,10 @@ public class AutomobileNumberService {
         do {
             var numberChars = new char[6];
             int randomCharacterPosition = random.nextInt(AutomobileNumberConstants.ALLOWED_CHARACTERS.length);
-            numberChars[1] = AutomobileNumberConstants.ALLOWED_CHARACTERS[randomCharacterPosition];
+            numberChars[0] = AutomobileNumberConstants.ALLOWED_CHARACTERS[randomCharacterPosition];
+
+            random.nextInt(10);
+            numberChars[1] = (char) (random.nextInt(10) + '0');
 
             random.nextInt(10);
             numberChars[2] = (char) (random.nextInt(10) + '0');
