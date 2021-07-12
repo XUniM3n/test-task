@@ -1,6 +1,5 @@
 package com.testtask.numbergenerator.controller;
 
-import com.testtask.numbergenerator.dto.AutomobileNumberDto;
 import com.testtask.numbergenerator.exception.MaxAutomobileNumberExceeded;
 import com.testtask.numbergenerator.exception.NoAutomobileNumbersInHistoryException;
 import com.testtask.numbergenerator.model.AutomobileNumber;
@@ -21,19 +20,21 @@ public class NumberController {
     }
 
     @GetMapping("/random")
-    public AutomobileNumberDto random() {
+    public String random() {
         AutomobileNumber automobileNumber = automobileNumberService.getRandomNumber();
-        return AutomobileNumberDto.getFromAutomobileNumber(automobileNumber);
+//        return AutomobileNumberDto.getFromAutomobileNumber(automobileNumber);
+        return automobileNumber.getNumber();
     }
 
     @GetMapping("/next")
-    public AutomobileNumberDto next() {
+    public String next() {
         AutomobileNumber automobileNumber;
         try {
             automobileNumber = automobileNumberService.getNextNumber();
         } catch (NoAutomobileNumbersInHistoryException | MaxAutomobileNumberExceeded e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
-        return AutomobileNumberDto.getFromAutomobileNumber(automobileNumber);
+//        return AutomobileNumberDto.getFromAutomobileNumber(automobileNumber);
+        return automobileNumber.getNumber();
     }
 }
